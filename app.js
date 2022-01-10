@@ -4,6 +4,11 @@ const port = 3000
 const restaurant_list = require('./restaurant.json')
 const exphbs = require('express-handlebars')
 
+//使用 npm i express-handlebars(最新) 結果這行會出錯 "TypeError: exphbs is not a function"
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
+
+app.set('view engine', 'handlebars')
+app.use(express.static('public'))
 
 //首頁
 app.get('/', (req, res) => {
@@ -29,11 +34,7 @@ app.get('/search', (req, res) => {
   res.render('index', { restaurant: restaurants, keyword: keyword })
 })
 
-//使用 npm i express-handlebars(最新) 結果這行會出錯 "TypeError: exphbs is not a function"
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 
-app.set('view engine', 'handlebars')
-app.use(express.static('public'))
 
 //設定監聽器
 app.listen(port, () => {

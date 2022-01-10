@@ -4,13 +4,21 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Restaurant</title>
   {{! include css files here }}
   {{!-- 試了好幾個 bootstrap.css 只有4.3.1可以正常--}}
-  {{!--
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> --}}
-  <link rel="stylesheet" href="stylesheets/bootstrap.css">
-  <link rel="stylesheet" href="stylesheets/index.css">
+  
+  
+  {{!-- <link rel="stylesheet" href="stylesheets/bootstrap.css"> --}}
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/all.min.css" />
+  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" /> 
+  {{!-- 下面這行 即使是同個檔案複製的 , 只要叫做 index.css就會出錯 --}}
+  {{!-- <link rel="stylesheet" href="/stylesheets/index.css"> --}}
+  <link rel="stylesheet" href="/stylesheets/trouble_maker.css">
+  <title>Restaurant</title>
+  
+  
 </head>
 
 <body>
@@ -33,8 +41,11 @@
   {{{body}}}
 
   {{! include javascript files here }}
+
+  
   <script src="javascripts/popper.js"></script>
   <script src="javascripts/bootstrap.js"></script>
 </body>
 
 </html>
+

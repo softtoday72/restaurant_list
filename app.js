@@ -1,8 +1,20 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const restaurant_list = require('./restaurant.json')
+// const restaurant_list = require('./restaurant.json')
 const exphbs = require('express-handlebars')
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
+const Restaurant = require('./models/restaurant')
+const db = mongoose.connection
+
+db.on('error', () => {
+  console.log('mongodb error')
+})
+
+db.once('open', () => {
+  console.log('mongodb connected!')
+})
 
 //使用 npm i express-handlebars(最新) 結果這行會出錯 "TypeError: exphbs is not a function"
 app.use(express.static('public'))
@@ -12,14 +24,25 @@ app.set('view engine', 'handlebars')
 
 //首頁
 app.get('/', (req, res) => {
-  res.render('index', { restaurant: restaurant_list.results })
+  Restaurant.find()
+    .lean()
+    .then(restaurant => res.render('index', { restaurant: restaurant }))
+    .catch(error => console.log(error))
+  
 })
 
 //分頁介紹
 app.get('/restaurants/:id', (req, res) => {
-  const restaurant = restaurant_list.results.find(restaurant => restaurant.id.toString() === req.params.id)
-  res.render('show', { restaurant: restaurant })
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .lean()
+    .then((restaurant) => res.render('show', { restaurant: restaurant }))
+    .catch(error => console.log(error))
+
 })
+
+
+
 
 //搜尋頁
 app.get('/search', (req, res) => {

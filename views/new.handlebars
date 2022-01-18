@@ -1,0 +1,52 @@
+<h1 class="mb-1 restaurant-show-title">新增餐廳</h1>
+<div class="container">
+  <form action="/restaurant" method="POST">
+    <div class="mb-3">
+      <label for="name" class="form-label">店名<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="name" placeholder="麥當當-北一店" name="name" required />
+    </div>
+    <div class="mb-3">
+      <label for="name_en" class="">英文店名<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="name_en" placeholder="崩達拉" name="name_en" require>
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label">分類<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="category" placeholder="美式" list="categoryOptions" name="category"
+        required />
+      {{! 使用datalist，讓使用者可選擇或自行輸入 }}
+      <datalist id="categoryOptions">
+        <option>美式</option>
+        <option>咖啡</option>
+        <option>中東料理</option>
+        <option>日本料理</option>
+        <option>義式餐廳</option>
+      </datalist>
+    </div>
+    <div class="mb-3">
+      <label for="rating" class="form-label">評分<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" id="rating" placeholder="5星" name="rating" required />
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form=label">電話<spen class="text-danger">*</spen></label>
+      <input type="text" class="form-control" id="phone" name="phone" placeholder="(02)1234-5678" require>
+    </div>
+    <div class="mb-3">
+      <lable for="location" class="form-label" >地址<span class="text-danger">*</span></lable>
+      <input type="text" class="form-control" id="location" name="location" required />
+    </div>
+    <div class="mb-3">
+      <label for="image" class="form-label">圖片連結<spen class="text-danger">*</spen></label>
+      <input type="url" class="form-control" id="image" name="image" >
+    </div>
+    <div class="mb-3">
+      <label for="google_map" class="form-label">Google地圖連結<span class="text-danger">*</span></label>
+      <input type="url" class="form-control" id="google_map" name="google_map"  />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">敘述<span class="text-danger">*</span></label>
+      <textarea class="form-control" id="description" rows="3" name="description" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-danger btn-sm text-white">Save</button>
+  </form>
+    
+    

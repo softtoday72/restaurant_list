@@ -36,7 +36,11 @@
 
       <img class="rounded mx-auto d-block mb-4 w-100" src="{{restaurant.image}}" alt="{{restaurant.name}}"
         style="max-width: 600px;">
+      <form action="/restaurants/{{restaurant._id}}/delete" method="POST">
+        <button type="submit" class="btn btn-danger btn-sm text-white">delete</button>
+        <a href="/" style="margin-left: 15px ;  padding:5px ; text-align : end;"><input type="button" value="Back"></a>
+      </form>
+      
     </div>
   </div>
 </div>
-

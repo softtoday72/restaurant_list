@@ -3,12 +3,13 @@ const app = express()
 const port = 3000
 // const restaurant_list = require('./restaurant.json')
 const exphbs = require('express-handlebars')
+const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
 const Restaurant = require('./models/restaurant')
 const db = mongoose.connection
 const bodyParser = require('body-parser')
-const { query } = require('express')
+
 
 db.on('error', () => {
   console.log('mongodb error')
@@ -17,12 +18,13 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('mongodb connected!')
 })
-
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
+app.set('view engine', 'handlebars')
 //使用 npm i express-handlebars(最新) 結果這行會出錯 "TypeError: exphbs is not a function"
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
-app.set('view engine', 'handlebars')
+app.use(methodOverride('_method'))
+
 
 //首頁
 app.get('/', (req, res) => {
@@ -44,7 +46,7 @@ app.get('/restaurants/:id', (req, res) => {
 })
 
 //刪除
-app.post('/restaurants/:id/delete', (req, res) => {
+app.delete('/restaurants/:id', (req, res) => {
   const id = req.params.id
   return Restaurant.findById(id)
     .then(restaurant => restaurant.remove())
@@ -59,7 +61,7 @@ app.post('/restaurants/:id/delete', (req, res) => {
 app.get("/restaurant/new", (req, res) => {
   res.render("new")
 })
-//按下Save後
+//按下Save後 (POST即是新增的語意, 不用改)
 app.post('/restaurant',(req,res) => {
   const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
   return Restaurant.create({
@@ -83,7 +85,7 @@ app.get('/restaurants/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/restaurants/:id/edited',(req,res) => {
+app.put('/restaurants/:id',(req,res) => {
   const id = req.params.id
   const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
   return Restaurant.findById(id)

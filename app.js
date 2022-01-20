@@ -8,6 +8,7 @@ mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true,
 const Restaurant = require('./models/restaurant')
 const db = mongoose.connection
 const bodyParser = require('body-parser')
+const { query } = require('express')
 
 db.on('error', () => {
   console.log('mongodb error')
@@ -106,13 +107,25 @@ app.post('/restaurants/:id/edited',(req,res) => {
 app.get('/search', (req, res) => {
   // console.log('req query=>', req.query.keyword)
   const keyword = req.query.keyword
-  //如果keyword是空字串 '' , 所有字串都會包含空字串 , movies 會等於 movieList, 80個電影都會被包含進去
-  const restaurants = restaurant_list.results.filter(restaurant => {
-    return restaurant.name.toLowerCase().includes(keyword) || restaurant.name_en.toLowerCase().includes(keyword) || restaurant.category.includes(keyword)
-  })
-  //右邊的movies是剛剛挑選出來的 , 左邊是index裡面的變數
-  //大括號左右兩邊都相同時可以寫一個就好 ex下面可改成 { movies }
-  res.render('index', { restaurant: restaurants, keyword: keyword })
+  const key = keyword.trim().toLowerCase()
+  //如果keyword是空字串 '' , 所有字串都會包含空字串 , movies 會等於 movieList, 80個電影都會被包含進去 ,但還是寫一下~
+  if (!keyword) {
+    return res.redirect('/')
+  }
+  
+  Restaurant.find()
+    .lean()
+    .then(dataset => {
+      //箭頭函式有大括號的話 , 要寫 return 不然沒有回傳
+      //省略大括號同時也省略了 return ,所以不用寫
+      const restaurants = dataset.filter(data => {
+        return data.name.toLowerCase().includes(key) || data.name_en.toLowerCase().includes(key) || data.category.includes(key)}
+      )
+      //右邊的movies是剛剛挑選出來的 , 左邊是index裡面的變數
+      //大括號左右兩邊都相同時可以寫一個就好 ex下面可改成 { movies }
+      res.render(('index'), { restaurant: restaurants, keyword: keyword })
+    })
+    .catch(error => console.log(error))
 })
 
 

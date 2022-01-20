@@ -51,7 +51,7 @@ router.get('/:id/edit', (req, res) => {
     .then((restaurant) => res.render('edit', { restaurant }))
     .catch(error => console.log(error))
 })
-
+//有時候找不到路由(Cannot get @#$%.....), 不是卡在入口找不到而是卡在出口找不到, 尤其是路由是 put post delete, 但錯誤訊息是get要警覺
 router.put('/:id', (req, res) => {
   const id = req.params.id
   const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body

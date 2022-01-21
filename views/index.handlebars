@@ -2,7 +2,7 @@
 <div class="container search-bar">
   <div class="search-bar-outer">
     <div class="search-bar-inner">
-      <form action="/search">
+      <form action="/">
         <h4 class="mb-2">尋找餐廳：</h4>
         <div class="input-group">
           <input type="text" name="keyword" class="form-control" placeholder="輸入餐廳、分類" aria-label="Restaurant Name..."
@@ -11,6 +11,17 @@
             <button class="btn btn-major" type="submit" id="search-button"><i class="fas fa-search"></i></button>
           </div>
         </div>
+      </form>
+      {{!-- 不寫method用預設的get --}}
+      <form action="/" class="form-group"  id="formSort">
+        <select name="sort" id="sort" class="btn btn btn-m" onchange="this.form.submit()">
+          {{!-- submit 出去後是拿value的值 --}}
+          <option value="0" >排序</option>
+          <option value="1" >A -> Z</option>
+          <option value="2" >Z -> A</option>
+          <option value="3" >類別</option>
+          <option value="4" >地區</option>
+        </select>
       </form>
     </div>
   </div>

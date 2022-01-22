@@ -2,6 +2,7 @@
 <div class="container search-bar">
   <div class="search-bar-outer">
     <div class="search-bar-inner">
+      {{!-- 這個表單的method也是get, 取值也要用query --}}
       <form action="/">
         <h4 class="mb-2">尋找餐廳：</h4>
         <div class="input-group">
@@ -12,7 +13,7 @@
           </div>
         </div>
       </form>
-      {{!-- 不寫method用預設的get --}}
+      {{!-- 不寫method用預設的get , 表單的值就要用 req.query.sort--}}
       <form action="/" class="form-group"  id="formSort">
         <select name="sort" id="sort" class="btn btn btn-m" onchange="this.form.submit()">
           {{!-- submit 出去後是拿value的值 --}}

@@ -9,10 +9,30 @@ router.get('/login', (req, res) => {
   res.render('login')
 })
 
-router.post('/login', passport.authenticate('local', {
+router.post('/login', (req, res, next) => {
+  const { email, password } = req.body
+  const errors = []
+  if (!email || !password) {
+    errors.push({ message: 'Email與密碼都是必填!' })
+  }
+
+  if (errors.length) {
+    return res.render('login', {
+      errors,
+      email,
+      password
+    })
+  }
+  next()
+}, passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/users/login'
 }))
+
+// router.post('/login', passport.authenticate('local', {
+//   successRedirect: '/',
+//   failureRedirect:  '/users/login'
+// }))
 
 //前往註冊頁按鈕
 router.get('/register', (req, res) => {

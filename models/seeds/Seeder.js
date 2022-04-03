@@ -1,3 +1,8 @@
+const bcrypt = require('bcryptjs')
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+const User = require('../user')
 //從json檔取出資料
 const data = require('../../restaurant.json').results
 

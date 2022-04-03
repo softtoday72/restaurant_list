@@ -1,9 +1,36 @@
 const express = require('express')
+const session = require('express-session')
 const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
 const methodOverride = require('method-override')
 const bodyParser = require('body-parser')
+const flash = require('connect-flash')
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
+//這行要在 express-session後面
+const usePassport = require('./config/passport')
+//app.use裡面 session要放最前面 (bodyParser, methodOverride不影響)
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}))
+//這行要在路由前面
+usePassport(app)
+app.use(flash())
+//在 usePassport(app) 之後、app.use(routes) 之前，加入一組 middleware
+app.use((req, res, next) => {
+  // 你可以在這裡 console.log(req.user) 等資訊來觀察
+  res.locals.isAuthenticated = req.isAuthenticated()
+  res.locals.user = req.user
+  //flash-message
+  res.locals.success_msg = req.flash('success_msg')  // 設定 success_msg 訊息
+  res.locals.warning_msg = req.flash('warning_msg')  // 設定 warning_msg 訊息
+  next()
+})
 
 //下面這行, 會自動找資料夾裡面的 index.js 所以打到資料夾位置就好
 const routes = require('./routes')

@@ -18,6 +18,7 @@ const Restaurant = require('../../models/restaurant')
 //搜尋頁合併首頁
 router.get('/', (req, res) => {
   // console.log('req query=>', req.query.keyword)
+  const userId = req.user._id
   const keyword = !req.query.keyword ? '' : req.query.keyword.trim()
   //const key = keyword.trim().toLowerCase()
   //如果keyword是空字串 '' , 所有字串都會包含空字串 , movies 會等於 movieList, 80個電影都會被包含進去
@@ -40,7 +41,7 @@ router.get('/', (req, res) => {
   // $or用法 : { $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
   // $regex用法 : { <field>: { $regex: 'pattern', $options: '<options>' } }
   //option: 'i' ,的 i是指 大小寫不敏感
-  Restaurant.find({ $or: [{ name: { $regex: keyword, $options: 'i' } }, { category: { $regex: keyword, $options: 'i' } }] })
+  Restaurant.find({userId},{ $or: [{ name: { $regex: keyword, $options: 'i' } }, { category: { $regex: keyword, $options: 'i' } }] })
     .sort(sorter)
     .lean()
     .then(restaurants => {

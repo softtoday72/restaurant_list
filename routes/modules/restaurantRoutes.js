@@ -13,9 +13,10 @@ router.get('/new', (req, res) => {
 
 //分頁介紹
 router.get('/:id', (req, res) => {
-  const id = req.params.id
+  const userId = req.user._id
+  const _id = req.params.id
   // findById() 是找資料庫裡面的 _id 而不是取名叫 id 的項目
-  return Restaurant.findById(id)
+  return Restaurant.findOne({ _id, userId })
     .lean()
     .then((restaurant) => res.render('show', { restaurant: restaurant }))
     .catch(error => {
@@ -26,8 +27,9 @@ router.get('/:id', (req, res) => {
 
 //修改資料
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({ _id, userId })
     .lean()
     .then((restaurant) => res.render('edit', { restaurant }))
     .catch(error => {
@@ -38,11 +40,12 @@ router.get('/:id/edit', (req, res) => {
 
 //新增之後,按下Save (POST即是新增的語意, 不用改)
 router.post('/', (req, res) => {
-  const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
+  const userId = req.user._id
+  const { name, name_en, category, image, location, phone, google_map, rating, description ,} = req.body
   return Restaurant.create({
     name, name_en, category, image, location, phone, google_map,
     rating: Number(rating),
-    description
+    description, userId
   })
     .then(() => res.redirect('/'))
     .catch(error => {
@@ -53,9 +56,10 @@ router.post('/', (req, res) => {
 
 //有時候找不到路由(Cannot get @#$%.....), 不是卡在入口找不到而是卡在出口找不到, 尤其是路由是 put post delete, 但錯誤訊息是get要警覺
 router.put('/:id', (req, res) => {
-  const id = req.params.id
+  const userId = req.user._id //裡頭的屬性
+  const _id = req.params.id //外頭的ID , 實際上這兩個ID值應該是相同
   const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
-  return Restaurant.findById(id)
+  return Restaurant.findOne({ _id, userId })
     .then(data => {
       data.name = name
       data.name_en = name_en
@@ -68,7 +72,7 @@ router.put('/:id', (req, res) => {
       data.description = description
       data.save()
     })
-    .then(() => res.redirect(`/restaurants/${id}`))
+    .then(() => res.redirect(`/restaurants/${_id}`))
     .catch(error => {
       console.log(error)
       res.render('errorPage', { error: error.message })
@@ -77,8 +81,9 @@ router.put('/:id', (req, res) => {
 
 //刪除
 router.delete('/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({_id, userId})
     .then(restaurant => restaurant.remove())
     .then(() => res.redirect('/'))
     .catch(error => {

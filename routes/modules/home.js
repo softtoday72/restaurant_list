@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
   // $or用法 : { $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
   // $regex用法 : { <field>: { $regex: 'pattern', $options: '<options>' } }
   //option: 'i' ,的 i是指 大小寫不敏感
-  Restaurant.find({userId},{ $or: [{ name: { $regex: keyword, $options: 'i' } }, { category: { $regex: keyword, $options: 'i' } }] })
+  Restaurant.find({ $and: [{ $or: [{ name: { $regex: keyword, $options: 'i' } }, { category: { $regex: keyword, $options: 'i' } }] }, { userId }] })
     .sort(sorter)
     .lean()
     .then(restaurants => {

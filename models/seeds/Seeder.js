@@ -21,31 +21,34 @@ const SEED_USER = [
 ]
 
 db.once('open', () => {
-  return Promise.all(Array.from(SEED_USER, (seedUser, i) => {
+  return Promise.all(Array.from({ length: SEED_USER.length }, (value, i) => {
 
-    bcrypt
+    return bcrypt
       .genSalt(10)
       .then(salt => {
-        return bcrypt.hash(seedUser.password, salt)
+        return bcrypt.hash(SEED_USER[i].password, salt)
       })
       .then(hash => {
-        return User.create({ email: seedUser.email, password: hash })
+        return User.create({ email: SEED_USER[i].email, password: hash })
       })
       .then(user => {
         const userId = user._id
-        let restaurants = []
-        seedUser.restaurantId.forEach((id) => {
-          const restaurant = restaurantList.find((item) => item.id === id)
-          restaurants.push(restaurant)
+        const userRestaurants = restaurantList.filter(element => {
+          return SEED_USER[i].restaurantId.includes(element.id)
         })
-        restaurants.map((data) => data.userId = userId)
-        return Restaurant.create(restaurants)
+        return Promise.all(
+          Array.from(userRestaurants, (value) => {
+            value.userId = userId  //在餐廳物件加入userId
+            return Restaurant.create(value)
+          }))
       })
-      .then(() => {
+      
+  }))
+  .then(() => {
         console.log('restaurantSeeder done.')
         process.exit() // 加入這行以後只會跑出5筆資料
       })
-  }))
+      .catch(error => console.log(error))
 })
 
 
